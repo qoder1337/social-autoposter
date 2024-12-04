@@ -25,13 +25,13 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'db', 'xposts.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'database', 'xposts.db')
 
 
 class DevelopmentConfig(Config):
     """Statement for enabling the development environment"""
     # Define the database - we are working with
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'db', 'dev_xposts.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'database', 'dev_xposts.db')
     DEBUG = True
 
 
@@ -39,7 +39,7 @@ class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
     PRESERVE_CONTEXT_ON_EXCEPTION = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'db', 'test_xposts.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'database', 'test_xposts.db')
 
 
 config = {

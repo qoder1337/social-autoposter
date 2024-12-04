@@ -18,6 +18,9 @@ def create_app(config_name):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # with app.app_context():
+    #     from app.database.models import TweetDatabase
+
 
     from app.routes.main import base_bp
     app.register_blueprint(base_bp)
