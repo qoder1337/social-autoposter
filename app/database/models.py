@@ -18,3 +18,6 @@ class SocialBase(db.Model):
 
 class TweetDatabase(SocialBase):
     pass
+
+class BskyDatabase(SocialBase):
+    pass

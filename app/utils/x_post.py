@@ -42,7 +42,7 @@ class AuthorizeOnX(BaseforX):
     def __init__(self, xuser):
         super().__init__(xuser)
 
-    def authrequest(self, xuser):
+    def authrequest(self):
         request_token_url = "https://api.twitter.com/oauth/request_token?oauth_callback=oob&x_auth_access_type=write"
         oauth = OAuth1Session(self.consumer_key, client_secret=self.consumer_secret)
 
@@ -87,14 +87,11 @@ class AuthorizeOnX(BaseforX):
 
 
 class PostOnX(BaseforX):
-    def __init__(self, xuser, tweetcontent, url):
+    def __init__(self, xuser):
         super().__init__(xuser)
 
-        self.tweetcontent = tweetcontent
-        self.url = url
-
-    def tweet(self):
-        tweet_already_existing = TweetDatabase.query.filter_by(url=self.url).first()
+    def tweet(self, tweetcontent, url):
+        tweet_already_existing = TweetDatabase.query.filter_by(url=url).first()
         if tweet_already_existing:
             print("URL bereits gepostet. Kein Tweet gesendet.")
             return
@@ -107,7 +104,7 @@ class PostOnX(BaseforX):
 
         oauth = self.create_session(access_token, access_token_secret)
 
-        tweet = {"text": self.tweetcontent}
+        tweet = {"text": tweetcontent}
 
         # Making the request
         response = oauth.post(
@@ -126,11 +123,12 @@ class PostOnX(BaseforX):
         json_response = response.json()
         print(json.dumps(json_response, indent=4, sort_keys=True))
 
-        add_to_db = TweetDatabase(url=self.url)
+        add_to_db = TweetDatabase(url)
         db.session.add(add_to_db)
         db.session.commit()
 
-
+### INIT INSTANCES
+x_post_bip = PostOnX("bestinpoker")
 
 if __name__ == "__main__":
     textinput = "Hallo Elon Moosk"
