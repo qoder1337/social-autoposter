@@ -1,7 +1,7 @@
 import json, os
-from datetime import datetime, timezone
 import requests
 from app import db
+from datetime import datetime, timezone
 from app.database.models import BskyDatabase
 
 bsky_dict = {
