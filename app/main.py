@@ -2,14 +2,18 @@ from app.utils.x_post import x_post_bip
 from app.utils.bsky_post import bsky_post_sw
 from app.utils.feedreader import feeds, scrape_rss, extract_hashtags
 from app.database.models import TweetDatabase, BskyDatabase
+from app.database.cleanup import cleanup_database
 import time
 import random
-import schedule
 
+check_dbs = TweetDatabase, BskyDatabase
+
+def clean_tweet_dbs():
+    for database in check_dbs:
+        cleanup_database(database)
 
 def random_latest_tweet():
 
-    check_dbs = TweetDatabase, BskyDatabase
 
     for feed in feeds:
 

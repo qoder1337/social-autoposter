@@ -1,6 +1,9 @@
 import os
 from dotenv import load_dotenv
+from pytz import timezone
 
+# Berlin-Zeitzone definieren
+BERLIN_TZ = timezone("Europe/Berlin")
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASEDIR, '.env'))

@@ -1,18 +1,17 @@
 from datetime import datetime
-from pytz import timezone
 from app import db
+from app.config import BERLIN_TZ
 
-# Berlin-Zeitzone definieren
-berlin_tz = timezone("Europe/Berlin")
+
 
 class SocialBase(db.Model):
     __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, default=lambda: datetime.now(berlin_tz))  # Standardwert
+    date = db.Column(db.DateTime, default=lambda: datetime.now(BERLIN_TZ))  # Standardwert
     url = db.Column(db.String(255))
 
     def __init__(self, url, date=None):
-        self.date = date or datetime.now(berlin_tz)  # Fallback, falls kein Datum übergeben wird
+        self.date = date or datetime.now(BERLIN_TZ)  # Fallback, falls kein Datum übergeben wird
         self.url = url
 
 
