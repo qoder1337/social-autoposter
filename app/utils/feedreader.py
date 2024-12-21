@@ -9,9 +9,9 @@ from app.utils.helpers import already_existing, timedelta_is_ok
 
 feeds = [
     "https://fussballwettbonus.com/index.php?option=com_osmap&view=xml&tmpl=component&news=1&id=2",
-    "https://fussballwettenbonus.info/alle/news/feed/", "https://fussballwetten24.org/alle/aktuell/feed/",
-    "https://gratiswetten.org/bereich/aktuell/feed/", "https://fussballwetten24.org/alle/tipps/feed/",
-    "https://gratiswetten.org/bereich/sportwetten-tipps/feed/", "https://fussballwettenbonus.info/alle/tipps/feed/"
+    "https://fussballwettenbonus.info/alle/news/feed/", "https://fussballwettenbonus.info/alle/tipps/feed/",
+    "https://gratiswetten.org/bereich/aktuell/feed/", "https://gratiswetten.org/bereich/sportwetten-tipps/feed/",
+    "https://fussballwetten24.org/alle/aktuell/feed/", "https://fussballwetten24.org/alle/tipps/feed/"
     ]
 
 
@@ -87,12 +87,3 @@ def extract_hashtags(input_url):
     filtered_slug = filter(lambda x: len(x) > 3 and x.isalpha() and x not in remove_words, url_slug)
 
     return " ".join(f"#{word}" for word in filtered_slug)
-
-
-
-if __name__ == "__main__":
-    from app.database.models import TweetDatabase, BskyDatabase
-
-    for feed in feeds:
-        scrape_rss(feed, TweetDatabase)
-        time.sleep(2000)
