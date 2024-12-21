@@ -59,25 +59,3 @@ def posting_routine(article_url_x = None, article_url_bsky = None):
 
     create_post(article_url_x, x_post_bip)
     create_post(article_url_bsky, bsky_post_sw)
-
-
-    # if article_url_x:
-    #     hashtags_x = extract_hashtags(article_url_x)
-    #     tweetcontent_x = f"{random.choice(contentspinner)}{hashtags_x} {article_url_x}"
-    #     x_post_bip.tweet(tweetcontent_x, article_url_x)
-
-
-    # if article_url_bsky:
-    #     hashtags_bsky = extract_hashtags(article_url_bsky)
-    #     tweetcontent_bsky = f"{random.choice(contentspinner)}{hashtags_bsky} {article_url_bsky}"
-    #     bsky_post_sw.tweet(tweetcontent_bsky, article_url_bsky)
-    #             # print(tweetcontent_bsky)
-
-    # time.sleep(1)
-
-
-def main():
-    schedule.every(random.randint(23,30)).seconds.do(random_latest_tweet)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
