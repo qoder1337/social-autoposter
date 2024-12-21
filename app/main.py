@@ -51,6 +51,23 @@ def posting_routine(article_url_x = None, article_url_bsky = None):
         "Tagesaktueller #onlinewetten Tipp: ",
         "Empfohlen für dich: ",
         "Check das aus: ",
+        "Die besten #Tipps für dich: ",
+        "Aktuelle #WettTipp News: ",
+        "Wichtige Neuigkeiten: ",
+        "Hier geht's zu den Highlights: ",
+        "Für Wettfreunde: ",
+        "Top-Artikel des Tages: ",
+        "Nicht verpassen: ",
+        "Neueste Infos für dich: ",
+        "Entdecke jetzt: ",
+        "Direkt zum Artikel: ",
+        "Hol dir die neuesten Insights: ",
+        "Exklusive Einblicke für Deine nächste #Sportwette: ",
+        "Der heiße Tipp des Tages: ",
+        "Verpasse keine #Wetten Tipps mehr: ",
+        "Die neuesten Trends: ",
+        "Täglich neue Updates: ",
+        "Für deine nächste #Wette : ",
     ]
 
     def create_post(article_url, platform):
