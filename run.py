@@ -1,34 +1,38 @@
-from app import create_app, db
-from app.utils.x_post import x_post_bip
-from app.utils.feedreader import *
-from app.utils.helpers import *
-from app.utils.bsky_post import bsky_post_sw
-from app.database.models import TweetDatabase, BskyDatabase
+import time
+import random
+import schedule
+from app import create_app
+from app.main import random_latest_tweet
 
 
 
 app = create_app("development")
 
 with app.app_context():
-    # db.create_all()
-    # textinput = "Neuer TWeet-TEST"
-    # url = "http://hallo.devonev"
+    # random_latest_tweet()
+
+    # from app.utils.bsky_post import bsky_post_sw
+    # bsky_post_sw.tweet("Check das aus Junge: https://fussballwettbonus.com/tipps/1038-lille-sturm-graz-champions-league-tipps-zum-6-spieltag", "https://fussballwettbonus.com/tipps/1038-lille-sturm-graz-champions-league-tipps-zum-6-spieltag")
+
+    # from app.utils.threads_post import post
+    # post()
+
+    # from app.utils.helpers import delete_db_entry
+    # from app.database.models import BskyDatabase
+    # delete_db_entry(3, BskyDatabase)
+
+    schedule.every(random.randint(23,30)).seconds.do(random_latest_tweet)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
-    # # x_post_bip.tweet(textinput, url)
-
-    # textinput2 = "Neuer 123-TEST"
-
-    # bsky_post_sw.tweet(textinput2, url)
-
-    scrape_rss("https://fussballwettbonus.com/index.php?option=com_osmap&view=xml&tmpl=component&news=1&id=2", TweetDatabase)
 
 
+if __name__ == "__main__":
 
-# if __name__ == "__main__":
-
-    # app.run(
-    #     debug=True,
-    #     use_reloader=False,
-    #     port=4444
-    # )
+    app.run(
+        debug=True,
+        use_reloader=False,
+        port=4444
+    )

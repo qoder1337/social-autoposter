@@ -4,7 +4,7 @@ from time import time
 from datetime import datetime
 from lxml import etree
 from app.utils.helpers import already_existing, timedelta_is_ok
-from app.database.models import TweetDatabase, BskyDatabase
+
 
 
 feeds = [
@@ -97,7 +97,7 @@ feeds = [
 
 #     return fwbcom_feed
 
-def process_sitemap(feed_url, database):
+def process_sitemap(feed_url, databases):
     fwbcom_feed = []
     response = requests.get(feed_url)
     response.raise_for_status()  # Fehler bei HTTP-Statuscodes
@@ -128,40 +128,53 @@ def process_sitemap(feed_url, database):
                 newsdate = datetime.now()
 
             # Debugging-Ausgaben
-            print(f"URL: {loc}")
-            print(f"Published: {publication_date} FORMATIERT: {newsdate}")
+            # print(f"URL: {loc}")
+            # print(f"Published: {publication_date} FORMATIERT: {newsdate}")
 
             # Veröffentlichung innerhalb der letzten 48 Stunden prüfen
-            if not already_existing(loc, database) and timedelta_is_ok(newsdate):
+            if not already_existing(loc, databases) and timedelta_is_ok(newsdate):
                 fwbcom_feed.append(loc)
 
     return fwbcom_feed
 
 
 
-def scrape_rss(url, database):
+def scrape_rss(url, databases):
 
     fwbcom_feed = []
     feed = []
 
     if url.startswith("https://fussballwettbonus.com/"):
-        print("fwb.com")
-        fwbcom_feed = process_sitemap(url, database)
+        print(f"Weiterleitung an xml Scraper für: {url}")
+        fwbcom_feed = process_sitemap(url, databases)
 
 
     feedraw = feedparser.parse(url)
 
     for entry in feedraw.entries:
         newsdate = datetime.strptime(entry.updated, "%a, %d %b %Y %H:%M:%S %z")
-        if not already_existing(entry.link, database) and timedelta_is_ok(newsdate):
+        if not already_existing(entry.link, databases) and timedelta_is_ok(newsdate):
             # print(type(entry.updated))
             # print(entry.updated_parsed)
             feed.append(entry.link)
-    print(fwbcom_feed + feed)
     return fwbcom_feed + feed
 
 
+def extract_hashtags(input_url):
+    ### ggf noch erweitern
+    remove_words = ("spieltag")
+
+    url_splits = input_url.split("/")
+    url_slug = [x.strip() for x in url_splits if x][-1].split("-")
+    filtered_slug = filter(lambda x: len(x) > 3 and x.isalpha() and x not in remove_words, url_slug)
+
+    return " ".join(f"#{word}" for word in filtered_slug)
+
+
+
 if __name__ == "__main__":
+    from app.database.models import TweetDatabase, BskyDatabase
+
     for feed in feeds:
         scrape_rss(feed, TweetDatabase)
         time.sleep(2000)

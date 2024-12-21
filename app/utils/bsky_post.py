@@ -1,4 +1,4 @@
-import json, os
+import json, os, re
 import requests
 from app import db
 from datetime import datetime, timezone
@@ -50,10 +50,28 @@ class PostOnBsky(BaseforBsky):
             self.create_session()
 
         now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-
+        
+        url_match = re.search(r"https?://\S+", tweetcontent)
+        if url_match:
+            url = url_match.group(0)
+        
         post = {
             "$type": "app.bsky.feed.post",
             "text": tweetcontent,
+            "facets": [
+            {
+                "index": {
+                    "byteStart": url_match.start(),
+                    "byteEnd": url_match.end()
+                },
+                "features": [
+                    {
+                        "$type": "app.bsky.richtext.facet#link",
+                        "uri": url
+                    }
+                ]
+            }
+        ],     
             "createdAt": now,
         }
 
