@@ -10,19 +10,19 @@ app = create_app("production")
 with app.app_context():
     random_latest_tweet()
 
-#     schedule.every(random.randint(85,90)).minutes.do(random_latest_tweet)
-#     schedule.every().monday.do(clean_tweet_dbs)
+    # schedule.every(random.randint(85,90)).minutes.do(random_latest_tweet)
+    # schedule.every().monday.do(clean_tweet_dbs)
 
-#     while True:
-#         schedule.run_pending()
-#         time.sleep(1)
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    app.run(
-        debug=True,
-        use_reloader=False,
-        port=4444
-    )
+#     app.run(
+#         debug=True,
+#         use_reloader=False,
+#         port=4444
+#     )
