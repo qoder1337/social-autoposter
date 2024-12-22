@@ -160,6 +160,7 @@ cython_debug/
 #.idea/
 
 
+#### EIGENE IGNORES
+/app/unbenutzt
 /app/tokens
-/app/utils/threads_post.py
-/app/utils/threadstest.ipynb
+migrations/
