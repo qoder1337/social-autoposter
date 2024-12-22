@@ -1,7 +1,11 @@
-# from app.database.models import TweetDatabase, BskyDatabase
 from datetime import datetime, timedelta
 import pytz
 from app import db
+import inspect
+
+def origin_log_msg(message):
+    current_function = inspect.currentframe().f_back.f_code.co_name
+    print(f"[[{current_function}]] {message}")
 
 def delete_db_entry(id, db_name):
     get_by_id = db_name.query.filter_by(id=id).first()

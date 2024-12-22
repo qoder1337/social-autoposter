@@ -1,40 +1,38 @@
-from app.utils.x_post import x_post_bip
-from app.utils.bsky_post import bsky_post_sw
-from app.utils.feedreader import feeds, scrape_rss, extract_hashtags
-from app.database.models import TweetDatabase, BskyDatabase
-from app.database.cleanup import cleanup_database
 import time
 import random
+from app.database.cleanup import cleanup_database
+from app.database.models import TweetDatabase, BskyDatabase
+from app.utils import x_post_bip, bsky_post_sw, feeds, scrape_rss, extract_hashtags
 
 check_dbs = TweetDatabase, BskyDatabase
+
 
 def clean_tweet_dbs():
     for database in check_dbs:
         cleanup_database(database)
 
+
 def random_latest_tweet():
-
-
     for feed in feeds:
 
         site_feed = scrape_rss(feed, check_dbs)
 
         if site_feed:
-
             # Zufällige Auswahl von Artikeln, abhängig von der Anzahl verfügbarer Artikel
             # min(len(site_feed), 2) -> maximal 2; oder eben 1 wenn len(site_feed) == 1 ist
             articles = random.sample(site_feed, min(len(site_feed), 2))
             ## 2 Artikel -> articles + []; 1 Artikel -> articles + [None]
-            article_urls = articles + [None] * (2 - len(articles))  # Ergänze den einen artikel [articles] mit `None`, falls weniger als 2 Artikel
+            article_urls = articles + [None] * (
+                2 - len(articles)
+            )  # Ergänze den einen artikel [articles] mit `None`, falls weniger als 2 Artikel
 
             posting_routine(*article_urls)
 
         else:
-            print(
-                f"Keine Artikel im Feed {feed}, um Tweet-Posts zu erstellen."
-            )
+            print(f"Keine Artikel im Feed {feed}, um Tweet-Posts zu erstellen.")
 
-def posting_routine(article_url_x = None, article_url_bsky = None):
+
+def posting_routine(article_url_x=None, article_url_bsky=None):
     contentspinner = [
         "Neues #Wetten Update: ",
         "Neuer Artikel: ",

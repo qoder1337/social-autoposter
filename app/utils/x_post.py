@@ -1,10 +1,13 @@
-import json, os
-from requests_oauthlib import OAuth1Session
+import os
+import json
 from dotenv import load_dotenv
+from requests_oauthlib import OAuth1Session
 
 from app import db
 from app.config import BASEDIR
+from app.utils import _log_message_
 from app.database.models import TweetDatabase
+
 
 load_dotenv()
 
@@ -85,7 +88,6 @@ class AuthorizeOnX(BaseforX):
 
 
 
-
 class PostOnX(BaseforX):
     def __init__(self, xuser):
         super().__init__(xuser)
@@ -106,122 +108,35 @@ class PostOnX(BaseforX):
 
         tweet = {"text": tweetcontent}
 
-        # Making the request
-        response = oauth.post(
-            "https://api.twitter.com/2/tweets",
-            json=tweet,
-        )
-
-        if response.status_code != 201:
-            raise Exception(
-                "Request returned an error: {} {}".format(response.status_code, response.text)
+        try:
+            response = oauth.post(
+                "https://api.twitter.com/2/tweets",
+                json=tweet,
             )
 
+            if response.status_code != 201:
+                _log_message_.message_handle(
+                    msg=f"Request returned an error: {response.status_code} {response.text} {response.headers}",
+                    level="error",
+                )
+                return
 
-        print("Response code: {}".format(response.status_code))
 
-        json_response = response.json()
-        print(json.dumps(json_response, indent=4, sort_keys=True))
+            print("Response code: {}".format(response.status_code))
+            response.raise_for_status()
 
-        add_to_db = TweetDatabase(url)
-        db.session.add(add_to_db)
-        db.session.commit()
+            # ### auskommentieren in Production
+            # print(json.dumps(response.json(), indent=4))
+
+            add_to_db = TweetDatabase(url)
+            db.session.add(add_to_db)
+            db.session.commit()
+
+        except Exception as e:
+            _log_message_.message_handle(
+                msg=f"unerwarteter Fehler: {e}",
+                level="error",
+            )
 
 ### INIT INSTANCES
 x_post_bip = PostOnX("bestinpoker")
-
-
-
-if __name__ == "__main__":
-    textinput = "Hallo Elon Moosk"
-    url = "http://hallo.dev"
-    x_post = PostOnX("bestinpoker", textinput, url)
-
-    x_post.tweet()
-
-
-# #########POST
-# #######################
-
-# # Tokens laden
-# with open("tokens.json", "r") as token_file:
-#     tokens = json.load(token_file)
-
-# access_token = tokens["access_token"]
-# access_token_secret = tokens["access_token_secret"]
-
-# oauth = OAuth1Session(
-#     consumer_key,
-#     client_secret=consumer_secret,
-#     resource_owner_key=access_token,
-#     resource_owner_secret=access_token_secret,
-# )
-
-# tweetcontent = {"text": "welong musk"}
-
-# # Making the request
-# response = oauth.post(
-#     "https://api.twitter.com/2/tweets",
-#     json=tweetcontent,
-# )
-
-# if response.status_code != 201:
-#     raise Exception(
-#         "Request returned an error: {} {}".format(response.status_code, response.text)
-#     )
-
-# print("Response code: {}".format(response.status_code))
-
-# json_response = response.json()
-# print(json.dumps(json_response, indent=4, sort_keys=True))
-
-
-
-
-
-
-# #########AUTH
-# #######################
-# # Get request token
-# request_token_url = "https://api.twitter.com/oauth/request_token?oauth_callback=oob&x_auth_access_type=write"
-# oauth = OAuth1Session(consumer_key, client_secret=consumer_secret)
-
-# try:
-#     fetch_response = oauth.fetch_request_token(request_token_url)
-# except ValueError:
-#     print(
-#         "There may have been an issue with the consumer_key or consumer_secret you entered."
-#     )
-
-# resource_owner_key = fetch_response.get("oauth_token")
-# resource_owner_secret = fetch_response.get("oauth_token_secret")
-# print("Got OAuth token: %s" % resource_owner_key)
-
-# # Get authorization
-# base_authorization_url = "https://api.twitter.com/oauth/authorize"
-# authorization_url = oauth.authorization_url(base_authorization_url)
-# print("Please go here and authorize: %s" % authorization_url)
-# verifier = input("Paste the PIN here: ")
-
-# # Get the access token
-# access_token_url = "https://api.twitter.com/oauth/access_token"
-# oauth = OAuth1Session(
-#     consumer_key,
-#     client_secret=consumer_secret,
-#     resource_owner_key=resource_owner_key,
-#     resource_owner_secret=resource_owner_secret,
-#     verifier=verifier,
-# )
-# oauth_tokens = oauth.fetch_access_token(access_token_url)
-
-# access_token = oauth_tokens["oauth_token"]
-# access_token_secret = oauth_tokens["oauth_token_secret"]
-
-# tokens = {
-#     "access_token": access_token,
-#     "access_token_secret": access_token_secret,
-# }
-
-# # Speichern des Access-Tokens
-# with open("tokens.json", "w") as token_file:
-#     json.dump(tokens, token_file)

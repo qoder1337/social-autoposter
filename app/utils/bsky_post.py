@@ -1,6 +1,9 @@
-import json, os, re
+import os
+import re
+import json
 import requests
 from app import db
+from app.utils import _log_message_
 from datetime import datetime, timezone
 from app.database.models import BskyDatabase
 
@@ -30,6 +33,8 @@ class BaseforBsky():
         self.session = resp.json()
         print(self.session["accessJwt"])
 
+
+
 class PostOnBsky(BaseforBsky):
     def __init__(self, bskyuser):
         super().__init__(bskyuser)
@@ -50,11 +55,12 @@ class PostOnBsky(BaseforBsky):
             self.create_session()
 
         now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-        
+
+        ### Link-Indexing
         url_match = re.search(r"https?://\S+", tweetcontent)
         if url_match:
             url = url_match.group(0)
-        
+
         post = {
             "$type": "app.bsky.feed.post",
             "text": tweetcontent,
@@ -71,25 +77,36 @@ class PostOnBsky(BaseforBsky):
                     }
                 ]
             }
-        ],     
+        ],
             "createdAt": now,
         }
 
-        resp = requests.post(
-            "https://bsky.social/xrpc/com.atproto.repo.createRecord",
-            headers={"Authorization": "Bearer " + self.session["accessJwt"]},
-            json={
-                "repo": self.session["did"],
-                "collection": "app.bsky.feed.post",
-                "record": post,
-            },
-        )
-        print(json.dumps(resp.json(), indent=2))
-        resp.raise_for_status()
+        try:
+            resp = requests.post(
+                "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+                headers={"Authorization": "Bearer " + self.session["accessJwt"]},
+                json={
+                    "repo": self.session["did"],
+                    "collection": "app.bsky.feed.post",
+                    "record": post,
+                },
+            )
+            print(json.dumps(resp.json(), indent=2))
+            resp.raise_for_status()
 
-        add_to_db = BskyDatabase(url)
-        db.session.add(add_to_db)
-        db.session.commit()
+            ### auskommentieren in Production
+            print(json.dumps(resp.json(), indent=4))
+
+            add_to_db = BskyDatabase(url)
+            db.session.add(add_to_db)
+            db.session.commit()
+
+        except Exception as e:
+            _log_message_.message_handle(
+                msg=f"unerwarteter Fehler: {e}",
+                level="error",
+            )
+
 
 
 ### INIT INSTANCES

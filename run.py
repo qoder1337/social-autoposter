@@ -5,16 +5,17 @@ from app import create_app
 from app.main import random_latest_tweet, clean_tweet_dbs
 
 
-app = create_app("development")
+app = create_app("production")
 
 with app.app_context():
+    random_latest_tweet()
 
-    schedule.every(random.randint(23,30)).minutes.do(random_latest_tweet)
-    schedule.every().monday.do(clean_tweet_dbs)
+#     schedule.every(random.randint(85,90)).minutes.do(random_latest_tweet)
+#     schedule.every().monday.do(clean_tweet_dbs)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
 
 
 
