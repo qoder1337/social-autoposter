@@ -2,10 +2,15 @@ import os
 import re
 import json
 import requests
+import traceback
 from app import db
 from app.utils import _log_message_
 from datetime import datetime, timezone
+from app.utils.helpers import origin_log_msg
 from app.database.models import BskyDatabase
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bsky_dict = {
     "sportwetten": {
@@ -24,14 +29,38 @@ class BaseforBsky():
         self.session = None
 
     def create_session(self):
-        resp = requests.post(
-            "https://bsky.social/xrpc/com.atproto.server.createSession",
-            json={"identifier": self.consumer_key, "password": self.consumer_secret},
-        )
 
-        resp.raise_for_status()
-        self.session = resp.json()
-        print(self.session["accessJwt"])
+        try:
+            _log_message_.message_handle(
+                msg=f"bsky create_session Payload: \
+                    {{'identifier': {self.consumer_key}, \
+                    'password': {'*' * len(self.consumer_secret)}}}",
+                level="info",
+            )
+
+            ### SESSION ANFRAGE
+            resp = requests.post(
+                "https://bsky.social/xrpc/com.atproto.server.createSession",
+                json={"identifier": self.consumer_key, "password": self.consumer_secret},
+            )
+            _log_message_.message_handle(
+                    msg=f"Response Status: {resp.status_code}",
+                    level="info",
+                )
+            _log_message_.message_handle(
+                    msg=f"Response Text: {resp.text}",
+                    level="info",
+                )
+
+            resp.raise_for_status()
+            self.session = resp.json()
+            print(self.session["accessJwt"])
+
+        except Exception as e:
+            _log_message_.message_handle(
+                msg=f"create_session bsky: {e}\n{traceback.format_exc()}",
+                level="error",
+            )
 
 
 
@@ -91,11 +120,12 @@ class PostOnBsky(BaseforBsky):
                     "record": post,
                 },
             )
-            print(json.dumps(resp.json(), indent=2))
+
+            origin_log_msg("Response code: {}".format(resp.status_code))
             resp.raise_for_status()
 
             ### auskommentieren in Production
-            print(json.dumps(resp.json(), indent=4))
+            # print(json.dumps(resp.json(), indent=4))
 
             add_to_db = BskyDatabase(url)
             db.session.add(add_to_db)

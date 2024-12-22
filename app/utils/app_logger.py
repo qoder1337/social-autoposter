@@ -1,5 +1,7 @@
 import sys
+import os
 import logging
+from app.config import BASEDIR
 from app.utils.decorators import singleton
 from logging.handlers import RotatingFileHandler
 
@@ -42,5 +44,5 @@ class AppLogger:
         if debug_level == "error":
             self.logger.error(kwargs.get("msg"))
 
-
-_log_message_ = AppLogger(log_filename="logs.log")
+logfile_path = os.path.join(BASEDIR, "logs.log")
+_log_message_ = AppLogger(log_filename=logfile_path)

@@ -36,8 +36,8 @@ def timedelta_is_ok(newsdate):
     time_diff = now - newsdate
 
     if time_diff <= timedelta(hours=48):
-        print("Die News wurde innerhalb der letzten 48 Stunden erstellt.")
+        # print("Die News wurde innerhalb der letzten 48 Stunden erstellt.")
         return True
     else:
-        print("Die News ist älter als 48 Stunden.")
+        # print("Die News ist älter als 48 Stunden.")
         return False

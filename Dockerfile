@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     libsqlite3-dev
 
-
 RUN echo "de_DE.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && \
     update-locale LC_ALL=de_DE.UTF-8 LANG=de_DE.UTF-8
@@ -25,8 +24,11 @@ COPY requirements-prod.txt .
 RUN pip install --no-cache-dir -r requirements-prod.txt
 
 COPY run.py ./
-COPY favicon.ico ./
 COPY app/ ./app/
+COPY favicon.ico .env ./
+
+# ist in diesem fall das gleiche
+# COPY ./.env ./
 
 # Startbefehl ohne Server
 CMD ["python3", "run.py"]

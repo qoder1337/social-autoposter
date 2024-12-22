@@ -6,6 +6,7 @@ from requests_oauthlib import OAuth1Session
 from app import db
 from app.config import BASEDIR
 from app.utils import _log_message_
+from app.utils.helpers import origin_log_msg
 from app.database.models import TweetDatabase
 
 
@@ -122,7 +123,7 @@ class PostOnX(BaseforX):
                 return
 
 
-            print("Response code: {}".format(response.status_code))
+            origin_log_msg("Response code: {}".format(response.status_code))
             response.raise_for_status()
 
             # ### auskommentieren in Production
