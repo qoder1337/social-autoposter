@@ -8,17 +8,17 @@ from app.main import random_latest_tweet, clean_tweet_dbs
 app = create_app("production")
 
 with app.app_context():
-    try:
-        random_latest_tweet()
-    except Exception as e:
-        print(e)
+    # try:
+    #     random_latest_tweet()
+    # except Exception as e:
+    #     print(e)
 
-    # schedule.every(random.randint(85,90)).minutes.do(random_latest_tweet)
-    # schedule.every().monday.do(clean_tweet_dbs)
+    schedule.every(random.randint(85,90)).minutes.do(random_latest_tweet)
+    schedule.every().monday.do(clean_tweet_dbs)
 
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 
