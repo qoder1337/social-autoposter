@@ -13,8 +13,8 @@ def clean_tweet_dbs():
 
 
 def random_latest_tweet():
+    # feeds beinhaltet eine simple Liste aus Feed-URLS (zb WP-Feed, oder auch xml sitemap Feed)
     for feed in feeds:
-
         site_feed = scrape_rss(feed, check_dbs)
 
         if site_feed:
@@ -22,8 +22,8 @@ def random_latest_tweet():
             # min(len(site_feed), 2) -> maximal 2; oder eben 1 wenn len(site_feed) == 1 ist
             articles = random.sample(site_feed, min(len(site_feed), 2))
             ## 2 Artikel -> articles + []; 1 Artikel -> articles + [None]
-            article_urls = articles + [None] * (
-                2 - len(articles)
+            article_urls = (
+                articles + [None] * (2 - len(articles))
             )  # Ergänze den einen artikel [articles] mit `None`, falls weniger als 2 Artikel
 
             posting_routine(*article_urls)

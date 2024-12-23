@@ -163,4 +163,6 @@ cython_debug/
 #### EIGENE IGNORES
 /app/unbenutzt
 /app/tokens
+/app/utils/feeds.py
+
 migrations/
