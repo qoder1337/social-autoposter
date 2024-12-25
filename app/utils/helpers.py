@@ -3,9 +3,11 @@ import pytz
 from app import db
 import inspect
 
+
 def origin_log_msg(message):
     current_function = inspect.currentframe().f_back.f_code.co_name
     print(f"[[{current_function}]] {message}")
+
 
 def delete_db_entry(id, db_name):
     get_by_id = db_name.query.filter_by(id=id).first()
@@ -14,6 +16,7 @@ def delete_db_entry(id, db_name):
         db.session.delete(get_by_id)
         db.session.commit()
         print(f"Artikel mit id {id} gelöscht!!!!")
+
 
 def already_existing(url, databases):
     for database in databases:
@@ -25,12 +28,11 @@ def already_existing(url, databases):
 
 
 def timedelta_is_ok(newsdate):
-
     if newsdate.tzinfo is None:
         try:
             newsdate = newsdate.replace(tzinfo=pytz.utc)
         except pytz.UnknownTimeZoneError:
-            raise ValueError(f"Unbekannte Zeitzone")
+            raise ValueError("Unbekannte Zeitzone")
 
     now = datetime.now(pytz.utc)
     time_diff = now - newsdate
