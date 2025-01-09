@@ -12,7 +12,10 @@ def process_sitemap(feed_url, databases):
     response.raise_for_status()  # Fehler bei HTTP-Statuscodes
 
     # XML-Daten parsen
-    tree = etree.fromstring(response.content)
+    # tree = etree.fromstring(response.content)
+
+    parser = etree.XMLParser()
+    tree = etree.fromstring(response.content, parser)
 
     # Namespaces definieren
     namespaces = {

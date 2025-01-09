@@ -16,6 +16,7 @@ xuser_dict = {
     "myxacc": {
         "consumer_key": os.getenv("XBIP_CONSUMER_KEY"),
         "consumer_secret": os.getenv("XBIP_CONSUMER_SECRET"),
+        "user_name": os.getenv("XBIP_USERNAME"),
     }
 }
 
@@ -30,7 +31,9 @@ class BaseforX:
         self.consumer_secret = xuser_dict[xuser]["consumer_secret"]
 
         self.token_dir = os.path.join(BASEDIR, "tokens")
-        self.token_filepath = os.path.join(self.token_dir, f"x-{xuser}.json")
+        self.token_filepath = os.path.join(
+            self.token_dir, f"x-{xuser_dict[xuser]['user_name']}.json"
+        )
 
     def create_session(self, resource_owner_key, resource_owner_secret, verifier=None):
         """Erstellt eine OAuth1Session."""
