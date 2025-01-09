@@ -168,3 +168,4 @@ cython_debug/
 migrations/
 app/database/tweet_posts.db
 app/database/dev_xposts.db
+requirements.txt
