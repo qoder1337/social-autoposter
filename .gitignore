@@ -164,8 +164,7 @@ cython_debug/
 /app/unbenutzt
 /app/tokens
 /app/utils/feeds.py
-
-migrations/
 app/database/tweet_posts.db
 app/database/dev_xposts.db
 requirements.txt
+migrations/
