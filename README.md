@@ -10,7 +10,7 @@
 
 ## flask Architektur als Backend
 
-- Separate SQLite dbs für jeden Account und jede Seite um Duplikate zu vermeiden.
+- Separate SQLite-db Tabellen für jeden Account und jede Seite, um Duplikate zu vermeiden.
 - striktes Achten auf flask best Practices bei der Architektur
 - Integration eines detaillierten Loggers, für reibungslosen Serverbetrieb
 
