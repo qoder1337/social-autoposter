@@ -5,8 +5,14 @@ import inspect
 
 
 def origin_log_msg(message):
-    current_function = inspect.currentframe().f_back.f_code.co_name
-    print(f"[[{current_function}]] {message}")
+    frame = inspect.currentframe()
+
+    if frame and frame.f_back:
+        current_function = frame.f_back.f_code.co_name
+        print(f"[[{current_function}]] {message}")
+
+    else:
+        print("Kein Caller Frame gefunden")
 
 
 def delete_db_entry(id, db_name):

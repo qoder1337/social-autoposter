@@ -13,13 +13,14 @@ from app.database.models import TweetDatabase
 load_dotenv()
 
 xuser_dict = {
-    "bestinpoker": {
-        "consumer_key" : os.getenv("XBIP_CONSUMER_KEY"),
-        "consumer_secret" : os.getenv("XBIP_CONSUMER_SECRET"),
+    "myxacc": {
+        "consumer_key": os.getenv("XBIP_CONSUMER_KEY"),
+        "consumer_secret": os.getenv("XBIP_CONSUMER_SECRET"),
     }
 }
 
-class BaseforX():
+
+class BaseforX:
     def __init__(self, xuser):
         # Überprüfen, ob xuser existiert
         if xuser not in xuser_dict:
@@ -66,7 +67,6 @@ class AuthorizeOnX(BaseforX):
         print("Please go here and authorize: %s" % authorization_url)
         verifier = input("Paste the PIN here: ")
 
-
         # access token holen
         access_token_url = "https://api.twitter.com/oauth/access_token"
 
@@ -85,8 +85,7 @@ class AuthorizeOnX(BaseforX):
 
         with open(self.token_filepath, "w") as token_file:
             json.dump(tokens, token_file)
-        print(f"Tokens saved to {self.token_filepath}")
-
+        print(f"Token gespeichert in {self.token_filepath}")
 
 
 class PostOnX(BaseforX):
@@ -117,13 +116,12 @@ class PostOnX(BaseforX):
 
             if response.status_code != 201:
                 _log_message_.message_handle(
-                    msg=f"Request returned an error: {response.status_code} {response.text} {response.headers}",
+                    msg=f"Request Fehler: {response.status_code} {response.text} {response.headers}",
                     level="error",
                 )
                 return
 
-
-            origin_log_msg("Response code: {}".format(response.status_code))
+            origin_log_msg("Response code twitter: {}".format(response.status_code))
             response.raise_for_status()
 
             # ### auskommentieren in Production
@@ -139,5 +137,6 @@ class PostOnX(BaseforX):
                 level="error",
             )
 
+
 ### INIT INSTANCES
-x_post_bip = PostOnX("bestinpoker")
+x_post_bip = PostOnX("myxacc")
