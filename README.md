@@ -1,5 +1,7 @@
 # Social Autoposter
 
+> 2DO: threads und facebook Integration
+
 ## Social Media Updates
 
 - tröpfenweises Posten der aktuellsten Beiträge auf Zufallsbasis (Quellen: RSS-Feed oder XML Sitemap)
