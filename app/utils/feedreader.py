@@ -2,7 +2,7 @@ import requests
 import feedparser
 from datetime import datetime
 from lxml import etree
-from app.utils.helpers import already_existing, timedelta_is_ok
+from app.utils import already_existing, timedelta_is_ok
 
 
 def process_sitemap(feed_url, databases):
